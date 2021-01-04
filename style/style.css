@@ -1,5 +1,4 @@
 body{
-    font-size: 0px;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -94,6 +93,132 @@ nav a:hover{
     background-color: white;
 }
 
+/* Main Content */
+.main{
+    margin-top: 72px;
+    width: 100%;
+    background-color: #0f1827;
+}
+.main-container{
+    display: flex;
+}
+
+
+
+
+
+
+
+
+
+
+.title{
+    color: #8afbff ;
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+hr{
+    width: 80%;
+    border: none;
+    height: 1px;
+    background-color: #8afbff ;
+}
+
+#cat-button{
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#cat-button button:hover{
+    cursor: pointer;
+}
+
+.category{
+    font-size: 20px;
+    width: 25%;
+    height: 40px;
+}
+
+.flex-container{
+    width: 100%;
+    padding-bottom: 80px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.flex-items{
+    width: 230px;
+    height: 400px;
+    margin: 20px;
+    /* background-color: #f4e0d7; */
+}
+
+.flex-items-container{
+    /* box-shadow: 2px 2px 5px rgb(189, 189, 189); */
+}
+
+.flex-items p{
+    text-align: center;
+    font-size: 18px;
+    color: #333333;
+}
+
+.flex-items-container:hover{
+    background-color: #f7f7f7;
+}
+
+.flex-items a{
+    text-decoration: none;
+}
+
+.imgContainer{
+    width: 230px;
+    height: 350px;
+    object-fit: fill;
+}
+
+.imgContainer img{
+    height: 100%; 
+    width: 100%; 
+    object-fit: contain'
+}
+
+#manga{
+    background-color: white;
+    color: black;
+    margin-right: 10px;
+}
+
+#anime{
+    margin-right: 10px;
+    background-color: black;
+    color: white;
+}
+
+#manga, #anime{
+    border: 1px solid #00f7ff ;
+    border-radius: 5px;
+    outline: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#flex-container2 .flex-items-container{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+
+
+
 /* Responsive */
 @media screen and (max-width: 700px){
     nav{
@@ -107,7 +232,6 @@ nav a:hover{
     #right-nav{
         background-color: black;
         width: 100%;
-        margin-top: 0;
         display: flex;
         flex-wrap: wrap;
         flex-direction: column-reverse;
