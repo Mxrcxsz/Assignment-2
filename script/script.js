@@ -7,19 +7,6 @@ menu.addEventListener('click', function(){
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 var path = window.location.pathname;
 var page = path.split("/").pop();
 console.log(page);
@@ -67,10 +54,8 @@ if(page == "index.html"){
         z.style.display = "flex";
         if (check == false)
         {
-            zc.style.backgroundColor = "black";
-            zc.style.color = "white";
-            yc.style.backgroundColor = "white";
-            yc.style.color = "black";
+            zc.style.backgroundColor = "#00f7ff";
+            yc.style.backgroundColor = "#152238";
             check = true;
         }
     }
@@ -81,10 +66,8 @@ if(page == "index.html"){
         y.style.display = "flex";
         if (check == true)
         {
-            yc.style.backgroundColor = "black";
-            yc.style.color = "white";
-            zc.style.backgroundColor = "white";
-            zc.style.color = "black";
+            yc.style.backgroundColor = "#00f7ff";
+            zc.style.backgroundColor = "#152238";
             check = false;
         }
     }

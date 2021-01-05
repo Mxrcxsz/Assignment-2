@@ -113,7 +113,7 @@ nav a:hover{
 
 
 .title{
-    color: #8afbff ;
+    color: white ;
     font-size: 40px;
     display: flex;
     justify-content: center;
@@ -123,7 +123,7 @@ hr{
     width: 80%;
     border: none;
     height: 1px;
-    background-color: #8afbff ;
+    background-color: white ;
 }
 
 #cat-button{
@@ -164,8 +164,8 @@ hr{
 
 .flex-items p{
     text-align: center;
-    font-size: 18px;
-    color: #333333;
+    font-size: 20px;
+    color: white;
 }
 
 .flex-items-container:hover{
@@ -189,19 +189,19 @@ hr{
 }
 
 #manga{
-    background-color: white;
-    color: black;
+    background-color: #152238;
+    color: white;
     margin-right: 10px;
 }
 
 #anime{
     margin-right: 10px;
-    background-color: black;
-    color: white;
+    background-color: #00f7ff;
+    color: white ;
 }
 
 #manga, #anime{
-    border: 1px solid #00f7ff ;
+    border: none;
     border-radius: 5px;
     outline: 0;
     display: flex;
@@ -213,6 +213,10 @@ hr{
     justify-content: center;
 }
 
+.flex-items:hover{
+    transition: all 0.2s ease;
+    transform: scale(1.1);
+}
 
 
 
