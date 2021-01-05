@@ -34,12 +34,13 @@ function get_carpark_nearby(lat, long, radius){
         url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
         type: "GET", //send it through GET method
         headers: {
+            "Access-Control-Allow-Origin": "https://mxrcxsz.github.io/Assignment-2/"
+        },
+        data: {
             "location":lat + "," + long,
             "radius":radius,
             "types":"parking",
-            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg",
-            "Access-Control-Allow-Origin": "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
-            "Access-Control-Allow-Origin": "true"
+            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
         },
         success: function(data) {
             console.log(data);
@@ -47,4 +48,4 @@ function get_carpark_nearby(lat, long, radius){
     });
 }
 
-get_carpark_nearby(1.2984498,103.7988242,500);
+get_carpark_nearby(1.2984498,103.7988242,700);
