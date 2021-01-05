@@ -1,5 +1,4 @@
 body{
-    font-size: 0px;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -72,17 +71,17 @@ nav a{
     width: 100px;
     height: 40px;
     border-radius: 5px;
-    background-color: #00f7ff;
+    background-color: #00dbe2;
 }
 
 nav a:hover{
-    color: #11dde4;
+    color: #00f7ff;
     transition: all 0.3s ease;
 }
 
 #btn:hover{
     color: #fff;
-    background-color:  #11dde4;
+    background-color:  #00f7ff;
     transition: all 0.3s ease;
 }
 
@@ -92,6 +91,65 @@ nav a:hover{
     margin: 5px auto;
     transition: all 0.3s ease-in-out;
     background-color: white;
+}
+
+/* Main Content */
+.main{
+    margin-top: 72px;
+    width: 100%;
+    background-color: #0f1827;
+}
+.main-container{
+    display: flex;
+    height: 650px;
+}
+
+.main-img-container{
+    /* background-color: rebeccapurple; */
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-content{
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.main-content h1{
+    font-size: 40px;
+    color: white;
+}
+
+.main-btn{
+    font-size: 25px;
+    border: none;
+    height: 70px;
+    width: 180px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(to left, #00dbe2 50%, #3f3d56 50%) right;
+    background-size: 200%;
+}
+
+.main-btn:hover{
+    cursor: pointer;
+    background-position: left;
+    transition: all 0.35s ease;
+}
+
+.main-content span{
+    width: 100%;
+    /* background-color: red; */
+}
+
+.main-img-container img{
+    width: 70%;
 }
 
 /* Responsive */
