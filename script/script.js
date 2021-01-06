@@ -1,3 +1,6 @@
+var path = window.location.pathname;
+var page = path.split("/").pop();
+
 const menu = document.querySelector('#mobile-menu');
 const menuLinks = document.querySelector('#right-nav')
 
@@ -28,13 +31,14 @@ function get_carpark_details(){
         }
     });
 }
+const proxyurl = "https://stark-chamber-98383.herokuapp.com/";
 
 function get_carpark_nearby(lat, long, radius){
     $.ajax({
-        url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
+        url: proxyurl + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
         type: "GET", //send it through GET method
         headers: {
-            "Access-Control-Allow-Origin": "https://mxrcxsz.github.io/Assignment-2/"
+            "Access-Control-Allow-Origin": '*'
         },
         data: {
             "location":lat + "," + long,
@@ -48,4 +52,27 @@ function get_carpark_nearby(lat, long, radius){
     });
 }
 
-get_carpark_nearby(1.2984498,103.7988242,700);
+function search_place(input){
+    $.ajax({
+        url: proxyurl + 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
+        type: "GET", //send it through GET method
+        headers: {
+            "Access-Control-Allow-Origin": '*'
+        },
+        data: {
+            "input":input,
+            "inputtype":"textquery",
+            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+        },
+        success: function(place_id) {
+            console.log(place_id);
+        }
+    });
+}
+
+// search_place("Tanglin Halt Road");
+
+// Checks page and run code accordingly
+if(page == "map.html"){
+    
+}   

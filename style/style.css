@@ -135,10 +135,10 @@ nav a:hover{
     padding: 20px;
     border-radius: 4px;
     cursor: pointer;
-    color: white;
     background: linear-gradient(to left, #00dbe2 50%, #3f3d56 50%) right;
     background-size: 200%;
 }
+
 .main-btn:focus {
     outline:0;
 }
@@ -147,6 +147,11 @@ nav a:hover{
     cursor: pointer;
     background-position: left;
     transition: all 0.35s ease;
+}
+
+.main-btn a{
+    color: white;
+    text-decoration: none;
 }
 
 .main-content span{
@@ -159,9 +164,29 @@ nav a:hover{
     user-select: none;
 }
 
+/* Map.html */
+#map {
+    margin-top: 72px;
+    width: 100%; 
+    height: 500px;
+}
 
-
-
+.custom-map-control-button {
+    appearance: button;
+    background-color: #fff;
+    border: 0;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    margin: 10px;
+    padding: 0 0.5em;
+    height: 40px;
+    font: 400 18px Roboto, Arial, sans-serif;
+    overflow: hidden;
+  }
+  .custom-map-control-button:hover {
+    background: #ebebeb;
+  }
 /* Responsive */
 @media screen and (max-width: 700px){
     nav{

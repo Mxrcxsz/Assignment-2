@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>snow</title>
+    <link rel="stylesheet" href="style/normalize.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg&callback=initMap&libraries=&v=weekly"
+      defer
+    ></script>
+</head>
+<body>
+    <!-- navigation bar -->
+    <header>
+        <nav>
+            <div id="logo">
+                <a href="#" id="navbar__logo">Snow</a>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <div id="right-nav">
+                <div class="nav-items"><a id="btn" href="#">Sign Up</a></div>
+                <div class="nav-items"><a href="#">Contact</a></div>
+                <div class="nav-items"><a href="#">Service</a></div>
+                <div class="nav-items"><a href="index.html">Home</a></div>
+            </div>
+        </nav>
+    </header>
+    <!-- Content -->
+    <script>
+        const zoom = 11;
+        const createMap = ({ lat, lng }) => {
+        return new google.maps.Map(document.getElementById('map'), {
+            center: { lat, lng },
+            zoom,
+            minZoom: zoom
+        });
+        };
+
+        const createMarker = ({ map, position }) => {
+            return new google.maps.Marker({ map, position });
+        };
+
+        const getPositionErrorMessage = code => {
+            switch (code) {
+                case 1:
+                return 'Permission denied.';
+                case 2:
+                return 'Position unavailable.';
+                case 3:
+                return 'Timeout reached.';
+                default:
+                return null;
+            }
+        }
+
+        const trackLocation = ({ onSuccess, onError = () => { } }) => {
+            if ('geolocation' in navigator === false) {
+                return onError(new Error('Geolocation is not supported by your browser.'));
+            }
+            // Use watchPosition instead.
+            return navigator.geolocation.watchPosition(onSuccess, onError,{
+                enableHighAccuracy: false,
+                timeout: 5000,
+                maximumAge: 0
+            });
+        };
+
+        function initMap() {
+            const map = createMap({lat: 1.3521, lng: 103.8198});
+            trackLocation({
+                onSuccess: ({ coords: { latitude: lat, longitude: lng } }) => {
+                    const marker = createMarker({ map, position: { lat, lng } });
+                    map.panTo({ lat, lng });
+                    map.setZoom(16);
+                },
+                onError: err =>
+                    alert(`Error: ${getPositionErrorMessage(err.code) || err.message}`)
+            });
+        }
+    </script>
+    <div id="map"></div>
+    <!-- footer -->
+    <footer>
+    </footer>
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script defer src="script/script.js"></script>
