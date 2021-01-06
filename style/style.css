@@ -171,22 +171,16 @@ nav a:hover{
     height: 500px;
 }
 
-.custom-map-control-button {
-    appearance: button;
-    background-color: #fff;
-    border: 0;
-    border-radius: 2px;
-    box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    margin: 10px;
-    padding: 0 0.5em;
-    height: 40px;
-    font: 400 18px Roboto, Arial, sans-serif;
-    overflow: hidden;
-  }
-  .custom-map-control-button:hover {
-    background: #ebebeb;
-  }
+.info {
+    padding: 1rem;
+    margin: 0;
+}
+
+.info.error {
+    color: #fff;
+    background: #dc3545;
+}
+
 /* Responsive */
 @media screen and (max-width: 700px){
     nav{
