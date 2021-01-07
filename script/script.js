@@ -52,10 +52,19 @@ function get_carpark_nearby(lat, long, radius){
     });
 }
 
+class Geo {
+    constructor(lat, lng) {
+      this.lat = lat;
+      this.lng = lng;
+    }
+}
+
+
 function search_place(input){
     $.ajax({
         url: proxyurl + 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
         type: "GET", //send it through GET method
+        async: false,
         headers: {
             "Access-Control-Allow-Origin": '*'
         },
@@ -65,14 +74,90 @@ function search_place(input){
             "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
         },
         success: function(place_id) {
-            console.log(place_id);
+            searchedGeo.lat = place_id;
+        }
+    });
+    console.log(searchedGeo.lat);
+}
+
+// input = "ChIJV8PyBkca2jERdGrR750ygBo";
+
+// var params = JSON.stringify({
+//     "input":input,
+//     "inputtype":"textquery",
+//     "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+// });
+
+// function ajax(a, b, e, d, c){ // URL, callback, method, formdata or {key:val},placeholder
+//     c = new XMLHttpRequest;
+//     c.open(e||'get', a);
+//     c.onload = b;
+//     c.send(d||null)
+// }
+// function callback(e){
+//     console.log(this.response);
+// }
+// var fd = new FormData();
+// fd.append('input', input);
+// fd.append('inputtype', "textquery");
+// fd.append('key', "AIzaSyAaDnggQoyZ9Rv8U6nwIq");
+
+// ajax(proxyurl + 'https://maps.googleapis.com/maps/api/place/details/json', callback, 'get', {
+//     "place_id":input,
+//     "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg",
+//     "fields":"geometry"
+// });
+
+$('<div id="secret">hello</div>').appendTo('footer');
+$('#secret').css("display", "none");
+
+var return_first;
+function callback(response) {
+    return_first = response;
+    //use return_first variable here
+    console.log(return_first.candidates[0]);
+    // document.getElementById("data").innerHTML = return_first.candidates[0].place_id;
+    $("#secret").html(return_first.candidates[0].place_id);
+    changeStorage();
+    callOut();
+}
+
+function changeStorage(){
+    localStorage.setItem( "data",JSON.stringify($("#secret").html()));
+}
+
+$.ajax({
+  'type': "GET",
+  'global': false,
+  'url': proxyurl + 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
+  'data': { 
+        "input":"Bukit Panjang",
+        "inputtype":"textquery",
+        "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+    },
+  'success': function(data){
+       callback(data);
+  }
+});
+
+function getPlaceGeo(placeId){
+    $.ajax({
+        url: proxyurl + 'https://maps.googleapis.com/maps/api/place/details/json',
+        type: "GET", //send it through GET method
+        headers: {
+            "Access-Control-Allow-Origin": '*'
+        },
+        data: {
+            "place_id":placeId,
+            "fields":"geometry",
+            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+        },
+        success: function(data) {
+            console.log(data.result.geometry);
         }
     });
 }
-
-// search_place("Tanglin Halt Road");
-
-// Checks page and run code accordingly
-if(page == "map.html"){
-    
-}   
+// getPlaceGeo("ChIJV8PyBkca2jERdGrR750ygBo");
+function callOut(){
+    alert(localStorage.getItem("data"))
+}
