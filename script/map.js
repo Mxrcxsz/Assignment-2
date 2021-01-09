@@ -1,4 +1,5 @@
 const zoom = 11;
+var map;
 const createMap = ({ lat, lng }) => {
     return new google.maps.Map(document.getElementById('map'), {
         center: { lat, lng },
@@ -72,7 +73,7 @@ function initMap() {
         }
     ];
     
-    const map = createMap({lat: 1.3521, lng: 103.8198});
+    map = createMap({lat: 1.3521, lng: 103.8198});
     styledMapType = new google.maps.StyledMapType(stylez, {name: "Edited"});
     const $info = document.getElementById('info');
 

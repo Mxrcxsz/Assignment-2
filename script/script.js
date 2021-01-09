@@ -18,6 +18,13 @@ menu.addEventListener('click', function(){
 
 // All Map API
 // Class for hdb carpark details
+class Geo {
+    constructor(lat, lng) {
+      this.lat = lat;
+      this.lng = lng;
+    }
+}
+
 function get_carpark_details(){
     $.ajax({
         url: 'https://api.jsonbin.io/b/5ff45d9709f7c73f1b6df03d',
@@ -50,15 +57,10 @@ function get_carpark_nearby(lat, long, radius){
             console.log(data);
         }
     });
+    var response = JSON.parse(localStorage.getItem("temp-data"));
+    localStorage.clear();
+    return response;
 }
-
-class Geo {
-    constructor(lat, lng) {
-      this.lat = lat;
-      this.lng = lng;
-    }
-}
-
 
 function search_place(input){
     $.ajax({
@@ -74,71 +76,15 @@ function search_place(input){
             "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
         },
         success: function(place_id) {
-            searchedGeo.lat = place_id;
+            localStorage.setItem("temp-data", JSON.stringify(place_id));
         }
     });
-    console.log(searchedGeo.lat);
+    var response = JSON.parse(localStorage.getItem("temp-data"));
+    localStorage.clear();
+    return response;
 }
 
-// input = "ChIJV8PyBkca2jERdGrR750ygBo";
-
-// var params = JSON.stringify({
-//     "input":input,
-//     "inputtype":"textquery",
-//     "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
-// });
-
-// function ajax(a, b, e, d, c){ // URL, callback, method, formdata or {key:val},placeholder
-//     c = new XMLHttpRequest;
-//     c.open(e||'get', a);
-//     c.onload = b;
-//     c.send(d||null)
-// }
-// function callback(e){
-//     console.log(this.response);
-// }
-// var fd = new FormData();
-// fd.append('input', input);
-// fd.append('inputtype', "textquery");
-// fd.append('key', "AIzaSyAaDnggQoyZ9Rv8U6nwIq");
-
-// ajax(proxyurl + 'https://maps.googleapis.com/maps/api/place/details/json', callback, 'get', {
-//     "place_id":input,
-//     "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg",
-//     "fields":"geometry"
-// });
-
-$('<div id="secret">hello</div>').appendTo('footer');
-$('#secret').css("display", "none");
-
-var return_first;
-function callback(response) {
-    return_first = response;
-    //use return_first variable here
-    console.log(return_first.candidates[0]);
-    // document.getElementById("data").innerHTML = return_first.candidates[0].place_id;
-    $("#secret").html(return_first.candidates[0].place_id);
-    changeStorage();
-    callOut();
-}
-
-function changeStorage(){
-    localStorage.setItem( "data",JSON.stringify($("#secret").html()));
-}
-
-$.ajax({
-  'type': "GET",
-  'global': false,
-  'url': proxyurl + 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
-  'data': { 
-        "input":"Bukit Panjang",
-        "inputtype":"textquery",
-        "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
-    },
-  'success': function(data){
-       callback(data);
-  }
-});
+// console.log(search_place("Bukit Batok"))
 
 function getPlaceGeo(placeId){
     $.ajax({
@@ -153,11 +99,59 @@ function getPlaceGeo(placeId){
             "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
         },
         success: function(data) {
-            console.log(data.result.geometry);
+            localStorage.setItem("temp-data", JSON.stringify(place_id));
+        },
+        error: function(xhr, status, error){
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Error - ' + errorMessage);
         }
     });
+    var response = JSON.parse(localStorage.getItem("temp-data"));
+    localStorage.clear();
+    return response;
 }
-// getPlaceGeo("ChIJV8PyBkca2jERdGrR750ygBo");
-function callOut(){
-    alert(localStorage.getItem("data"))
-}
+
+document.getElementById("search-loc-btn").addEventListener("click", function(){
+    // console.log(search_place($("#search-loc").val()).candidates[0]);
+    $.ajax({
+        url: proxyurl + 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
+        type: "GET", //send it through GET method
+        async: false,
+        headers: {
+            "Access-Control-Allow-Origin": '*'
+        },
+        data: {
+            "input":$("#search-loc").val(),
+            "inputtype":"textquery",
+            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+        },
+        success: function(place_id) {
+            $.ajax({
+                url: proxyurl + 'https://maps.googleapis.com/maps/api/place/details/json',
+                type: "GET", //send it through GET method
+                headers: {
+                    "Access-Control-Allow-Origin": '*'
+                },
+                data: {
+                    "place_id":place_id.candidates[0].place_id,
+                    "fields":"geometry",
+                    "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+                },
+                success: function(data) {
+                    // const lat = data.result.geometry.location.lat;
+                    // const lng = data.result.geometry.location.lng;
+                    console.log(data.result.geometry.location);
+                    latLng = new google.maps.LatLng(1.3591, 103.8198)
+                    new google.maps.Marker({
+                        position: latLng,
+                        map: map
+                    });
+                },
+                error: function(xhr, status, error){
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    alert('Error - ' + errorMessage);
+                }
+            });
+        }
+    });
+});
