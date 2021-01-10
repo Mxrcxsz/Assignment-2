@@ -18,13 +18,22 @@ menu.addEventListener('click', function(){
 
 // All Map API
 // Class for hdb carpark details
-class Geo {
-    constructor(lat, lng) {
-      this.lat = lat;
-      this.lng = lng;
-    }
-}
+// var typingTimer;                //timer identifier
+// var doneTypingInterval = 5000;  //time in ms, 5 second for example
+// var $input = $('#search-loc');
 
+// //on keyup, start the countdown
+// $input.on('keyup', function () {
+//   clearTimeout(typingTimer);
+//   typingTimer = setTimeout(doneTyping, doneTypingInterval);
+// });
+
+// //on keydown, clear the countdown 
+// $input.on('keydown', function () {
+//   clearTimeout(typingTimer);
+// });
+
+//user is "finished typing," do something
 function get_carpark_details(){
     $.ajax({
         url: 'https://api.jsonbin.io/b/5ff45d9709f7c73f1b6df03d',
@@ -34,10 +43,12 @@ function get_carpark_details(){
             "secret-key":"$2b$10$U32F5.Qe7ErRiSaybhPmd.XQ8oikTg4jGxtm0x3zN23lMpohizeva"
         },
         success: function(data) {
-            console.log(data);
+            console.log(data[0]);
         }
     });
 }
+// get_carpark_details();
+
 const proxyurl = "https://stark-chamber-98383.herokuapp.com/";
 
 function get_carpark_nearby(lat, long, radius){
@@ -62,96 +73,32 @@ function get_carpark_nearby(lat, long, radius){
     return response;
 }
 
-function search_place(input){
-    $.ajax({
-        url: proxyurl + 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
-        type: "GET", //send it through GET method
-        async: false,
-        headers: {
-            "Access-Control-Allow-Origin": '*'
-        },
-        data: {
-            "input":input,
-            "inputtype":"textquery",
-            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
-        },
-        success: function(place_id) {
-            localStorage.setItem("temp-data", JSON.stringify(place_id));
-        }
-    });
-    var response = JSON.parse(localStorage.getItem("temp-data"));
-    localStorage.clear();
-    return response;
-}
-
-// console.log(search_place("Bukit Batok"))
-
-function getPlaceGeo(placeId){
-    $.ajax({
-        url: proxyurl + 'https://maps.googleapis.com/maps/api/place/details/json',
-        type: "GET", //send it through GET method
-        headers: {
-            "Access-Control-Allow-Origin": '*'
-        },
-        data: {
-            "place_id":placeId,
-            "fields":"geometry",
-            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
-        },
-        success: function(data) {
-            localStorage.setItem("temp-data", JSON.stringify(place_id));
-        },
-        error: function(xhr, status, error){
-            var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Error - ' + errorMessage);
-        }
-    });
-    var response = JSON.parse(localStorage.getItem("temp-data"));
-    localStorage.clear();
-    return response;
-}
-
 document.getElementById("search-loc-btn").addEventListener("click", function(){
     // console.log(search_place($("#search-loc").val()).candidates[0]);
-    $.ajax({
-        url: proxyurl + 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
-        type: "GET", //send it through GET method
-        async: false,
-        headers: {
-            "Access-Control-Allow-Origin": '*'
-        },
-        data: {
-            "input":$("#search-loc").val(),
-            "inputtype":"textquery",
-            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
-        },
-        success: function(place_id) {
-            $.ajax({
-                url: proxyurl + 'https://maps.googleapis.com/maps/api/place/details/json',
-                type: "GET", //send it through GET method
-                headers: {
-                    "Access-Control-Allow-Origin": '*'
-                },
-                data: {
-                    "place_id":place_id.candidates[0].place_id,
-                    "fields":"geometry",
-                    "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
-                },
-                success: function(data) {
-                    // const lat = data.result.geometry.location.lat;
-                    // const lng = data.result.geometry.location.lng;
-                    console.log(data.result.geometry.location);
-                    latLng = new google.maps.LatLng(1.3591, 103.8198)
-                    new google.maps.Marker({
-                        position: latLng,
-                        map: map
-                    });
-                },
-                error: function(xhr, status, error){
-                    var errorMessage = xhr.status + ': ' + xhr.statusText
-                    alert('Error - ' + errorMessage);
-                }
-            });
+    fetch(proxyurl + "https://api.mapbox.com/geocoding/v5/mapbox.places/"+ $("#search-loc").val() +".json?types=postcode&access_token=sk.eyJ1IjoibXhyY3hzeiIsImEiOiJja2pwdWk0cTgwY2FlMnVqeDBsZzhueHNwIn0.UvwW_-2_MB4G6SwJgLxKqQ")
+    .then(response => response.json()) 
+    .then(function(data){
+        console.log(data)
+
+        for (var i = 0; i < (data.features).length; i++){
+            if ((data.features[i].place_name).includes("Singapore")){
+                latLng = new google.maps.LatLng(data.features[i].center[1], data.features[i].center[0])
+                let lat = data.features[i].center[1]
+                let lng = data.features[i].center[0]
+                
+                console.log(data.features[i].center[1], data.features[i].center[0])
+
+                var marker= new google.maps.Marker({
+                    position: latLng
+                });               
+                marker.setMap(map);
+                map.panTo({ lat, lng });
+                break
+            }
+            else{
+                continue
+            }
         }
-    });
+    })
 });
+
