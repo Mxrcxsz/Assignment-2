@@ -1,6 +1,9 @@
 # ID-ASG-2
 Hi my name is Marcus Yeong, this is my id assignment 2 pitch recording. The purpose of creating this website is to find the nearest car park for the entered location.
 
+## Website Link 
+**[Snow](https://mxrcxsz.github.io/Assignment-2/)** 
+
 ## Website researched
 The primary function of this website is to search for nearby carparks around the current location and also around which ever location the user chooses. I chose this idea for the assingnment as I found it interesting how the api can work using real time data.
 For my research, the webpages that I have referenced is **[Parkopedia](https://www.parkopedia.com/)** and **[Google Map](https://www.google.com.sg/maps)** After researching, I went to look for suitable APIs that fit my needs. I came accross Google API, Mapbox API and decided to choose them as it had a clear API doucmentation I design it this way as I refer to the design of Parkopedia, which also has same purpose of my website.
