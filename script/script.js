@@ -1,5 +1,6 @@
 var path = window.location.pathname;
 var page = path.split("/").pop();
+var min = 0;
 
 const menu = document.querySelector('#mobile-menu');
 const menuLinks = document.querySelector('#right-nav');
@@ -158,8 +159,14 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
                                                 "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjY5NTIsInVzZXJfaWQiOjY5NTIsImVtYWlsIjoiczEwMjA4NDk1QGNvbm5lY3QubnAuZWR1LnNnIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHA6XC9cL29tMi5kZmUub25lbWFwLnNnXC9hcGlcL3YyXC91c2VyXC9zZXNzaW9uIiwiaWF0IjoxNjEwMjcyNzQ1LCJleHAiOjE2MTA3MDQ3NDUsIm5iZiI6MTYxMDI3Mjc0NSwianRpIjoiMDllOTM0N2UzMzI3MDZjZGNiOTA5OTVlMDliMmVkNGIifQ.2TD19vUp5ZpgP7cShVjUBw4fmM5FBIsJIv5nDzPEHaA"
                                             },
                                             success: function(geocodeInfo2) {
-                                                console.log(geocodeInfo2);
-                                                // console.log(geocodeInfo2[0].LONGITUDE);
+                                                if(geocodeInfo2.GeocodeInfo.length != 0)
+                                                {
+                                                    // console.log(geocodeInfo2.GeocodeInfo[0].LATITUDE);
+                                                    var result = haversineDistance([geocodeInfo2.GeocodeInfo[0].LONGITUDE,geocodeInfo2.GeocodeInfo[0].LATITUDE],[lng, lat]);
+                                                    if(result>min){
+                                                        console.log("Nearest is", geocodeInfo[j].address);
+                                                    }
+                                                }
                                             }
                                         });
                                     }
@@ -168,7 +175,6 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
                         });
                     }
                 });
-
                 break
             }
             else{
