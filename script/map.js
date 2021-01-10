@@ -129,7 +129,70 @@ function initMap() {
             }
             markersArray.push(marker);
             map.panTo({ lat, lng });
-            smoothZoom(map, 16, map.getZoom());
+            smoothZoom(map, 17, map.getZoom());
+
+            map.addListener("center_changed", () => {
+                // 3 seconds after the center of the map has changed, pan back to the
+                // marker.
+                window.setTimeout(() => {
+                  map.panTo(marker.getPosition());
+                }, 3000);
+            });
+
+            $.ajax({
+                url: proxyurl + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
+                type: "GET", //send it through GET method
+                headers: {
+                    "Access-Control-Allow-Origin": '*'
+                },
+                data: {
+                    "location":lat + "," + lng,
+                    "radius":1000,
+                    "types":"parking",
+                    "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+                },
+                success: function(data) {
+                    data.results.forEach(position => {
+                        // console.log(position.geometry);
+                        lat = position.geometry.location.lat;
+                        lng = position.geometry.location.lng;
+                        // console.log(position.geometry.location);
+                        latLng = new google.maps.LatLng(lat, lng)
+                        var parkingMarker= new google.maps.Marker({
+                            position: latLng,
+                            icon: "image/parking.png"
+                        });
+
+                        $.ajax({
+                            url: proxyurl + 'https://maps.googleapis.com/maps/api/place/details/json',
+                            type: "GET", //send it through GET method
+                            headers: {
+                                "Access-Control-Allow-Origin": '*'
+                            },
+                            data: {
+                                "place_id": position.place_id,
+                                "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+                            },
+                            success: function(data_details) {
+                                parkingMarker.Name = position.name;
+                                parkingMarker.Address = data_details.result.formatted_address;
+                                parkingMarker.Rating = position.rating;
+                                markersArray.push(parkingMarker);
+                                parkingMarker.setMap(map);
+                                parkingMarker.addListener("click", () => {
+                                    document.getElementById("#title").innerHTML = parkingMarker.Name;
+                                    document.getElementById("#address").innerHTML = "Address: " + parkingMarker.Address;
+                                    document.getElementById("#rating").innerHTML = "User Rating: " + parkingMarker.Rating;
+                                    $("#get-direction").attr("href", "https://www.google.com/maps?daddr=" + lat + "," + lng)
+                                    right_section.style.left = "0px";
+                                    right_section.style.opacity = "1";
+                                    right_section.style.transition = "0.3s";
+                                });
+                            }
+                        });
+                    });
+                }
+            });
         },
         onError: err =>
         {

@@ -1,6 +1,7 @@
 var path = window.location.pathname;
 var page = path.split("/").pop();
 var min = 0;
+var right_section = document.getElementById("right-sec")
 
 const menu = document.querySelector('#mobile-menu');
 const menuLinks = document.querySelector('#right-nav');
@@ -16,37 +17,13 @@ menu.addEventListener('click', function(){
     }
 })
 
-Number.prototype.toRad = function() {
-    return this * Math.PI / 180;
-}
+document.getElementById("close-btn").addEventListener('click', function(){
+    right_section.style.left = "-500px";
+    right_section.style.opacity = "0";
+    right_section.style.transition = "0.3s";
+});
 
-function haversineDistance(coords1, coords2) {
-    function toRad(x) {
-      return x * Math.PI / 180;
-    }
-
-    var lon1 = coords1[0];
-    var lat1 = coords1[1];
-
-    var lon2 = coords2[0];
-    var lat2 = coords2[1];
-  
-    var R = 6371; // km
-  
-    var x1 = lat2 - lat1;
-    var dLat = toRad(x1);
-    var x2 = lon2 - lon1;
-    var dLon = toRad(x2)
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c;
-
-    return d;
-}
-
-// All Map API
+// All Map html
 function get_carpark_details(){
     $.ajax({
         url: 'https://api.jsonbin.io/b/5ff45d9709f7c73f1b6df03d',
@@ -68,28 +45,6 @@ if (page == "map.html"){
 }
 
 const proxyurl = "https://stark-chamber-98383.herokuapp.com/";
-function get_carpark_nearby(lat, long, radius){
-    $.ajax({
-        url: proxyurl + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
-        type: "GET", //send it through GET method
-        headers: {
-            "Access-Control-Allow-Origin": '*'
-        },
-        data: {
-            "location":lat + "," + long,
-            "radius":radius,
-            "types":"parking",
-            "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
-        },
-        success: function(data) {
-            console.log(data);
-        }
-    });
-    var response = JSON.parse(localStorage.getItem("temp-data"));
-    localStorage.clear();
-    return response;
-}
-
 document.getElementById("search-loc-btn").addEventListener("click", function(){
     navigator.geolocation.clearWatch(id);
     var re = /[0-9A-Fa-f]{6}/g;
@@ -100,23 +55,20 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
     fetch(proxyurl + "https://api.mapbox.com/geocoding/v5/mapbox.places/"+ $("#search-loc").val() +".json?types=postcode&access_token=sk.eyJ1IjoibXhyY3hzeiIsImEiOiJja2pwdWk0cTgwY2FlMnVqeDBsZzhueHNwIn0.UvwW_-2_MB4G6SwJgLxKqQ")
     .then(response => response.json()) 
     .then(function(data){
-        console.log(data)
         for (var i = 0; i < (data.features).length; i++){
             if ((data.features[i].place_name).includes("Singapore")){
                 clearOverlays()
                 var lat = data.features[i].center[1]
                 var lng = data.features[i].center[0]
                 latLng = new google.maps.LatLng(lat, lng)
-                
-                console.log(data.features[i].center[1], data.features[i].center[0])
-                
+                                
                 var marker= new google.maps.Marker({
                     position: latLng
                 });
                 markersArray.push(marker);
                 marker.setMap(map);
                 map.panTo({ lat, lng });
-                smoothZoom(map, 16, map.getZoom());
+                smoothZoom(map, 17, map.getZoom());
                 $.ajax({
                     url: proxyurl + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
                     type: "GET", //send it through GET method
@@ -125,7 +77,7 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
                     },
                     data: {
                         "location":lat + "," + lng,
-                        "radius":800,
+                        "radius":1000,
                         "types":"parking",
                         "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
                     },
@@ -140,36 +92,34 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
                                 position: latLng,
                                 icon: "image/parking.png"
                             });
-                            parkingMarker.setMap(map);
-                            
+    
                             $.ajax({
-                                url: 'https://api.jsonbin.io/b/5ff45d9709f7c73f1b6df03d',
+                                url: proxyurl + 'https://maps.googleapis.com/maps/api/place/details/json',
                                 type: "GET", //send it through GET method
                                 headers: {
-                                    "content-type":"application/json",
-                                    "secret-key":"$2b$10$U32F5.Qe7ErRiSaybhPmd.XQ8oikTg4jGxtm0x3zN23lMpohizeva"
+                                    "Access-Control-Allow-Origin": '*'
                                 },
-                                success: function(geocodeInfo) {
-                                    for (var j = 0; j < 10; j++){
-                                        $.ajax({
-                                            url: proxyurl + 'https://developers.onemap.sg/privateapi/commonsvc/revgeocodexy',
-                                            type: "GET", //send it through GET method
-                                            data: {
-                                                "location":geocodeInfo[j].x_coord + ","+ geocodeInfo[j].y_coord,
-                                                "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjY5NTIsInVzZXJfaWQiOjY5NTIsImVtYWlsIjoiczEwMjA4NDk1QGNvbm5lY3QubnAuZWR1LnNnIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHA6XC9cL29tMi5kZmUub25lbWFwLnNnXC9hcGlcL3YyXC91c2VyXC9zZXNzaW9uIiwiaWF0IjoxNjEwMjcyNzQ1LCJleHAiOjE2MTA3MDQ3NDUsIm5iZiI6MTYxMDI3Mjc0NSwianRpIjoiMDllOTM0N2UzMzI3MDZjZGNiOTA5OTVlMDliMmVkNGIifQ.2TD19vUp5ZpgP7cShVjUBw4fmM5FBIsJIv5nDzPEHaA"
-                                            },
-                                            success: function(geocodeInfo2) {
-                                                if(geocodeInfo2.GeocodeInfo.length != 0)
-                                                {
-                                                    // console.log(geocodeInfo2.GeocodeInfo[0].LATITUDE);
-                                                    var result = haversineDistance([geocodeInfo2.GeocodeInfo[0].LONGITUDE,geocodeInfo2.GeocodeInfo[0].LATITUDE],[lng, lat]);
-                                                    if(result>min){
-                                                        console.log("Nearest is", geocodeInfo[j].address);
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
+                                data: {
+                                    "place_id": position.place_id,
+                                    "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+                                },
+                                success: function(data_details) {
+                                    parkingMarker.Name = position.name;
+                                    parkingMarker.Address = data_details.result.formatted_address;
+                                    parkingMarker.Rating = position.rating;
+                                    markersArray.push(parkingMarker);
+                                    parkingMarker.setMap(map);
+                                    parkingMarker.addListener("click", () => {
+                                        click = true;
+                                        document.getElementById("#title").innerHTML = parkingMarker.Name;
+                                        document.getElementById("#address").innerHTML = "Address: " + parkingMarker.Address;
+                                        document.getElementById("#rating").innerHTML = "User Rating: " + parkingMarker.Rating;
+                                        // document.getElementById('#get-direction').getAttribute("href") = "https://www.google.com/maps?daddr=" + lat + "," + lng;
+                                        $("#get-direction").attr("href", "https://www.google.com/maps?daddr=" + lat + "," + lng)
+                                        right_section.style.left = "0px";
+                                        right_section.style.opacity = "1";
+                                        right_section.style.transition = "0.3s";
+                                    });
                                 }
                             });
                         });
