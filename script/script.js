@@ -15,6 +15,10 @@ menu.addEventListener('click', function(){
     }
 })
 
+Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+ } 
+
 // All Map API
 function get_carpark_details(){
     $.ajax({
@@ -73,8 +77,8 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
         for (var i = 0; i < (data.features).length; i++){
             if ((data.features[i].place_name).includes("Singapore")){
                 clearOverlays()
-                let lat = data.features[i].center[1]
-                let lng = data.features[i].center[0]
+                var lat = data.features[i].center[1]
+                var lng = data.features[i].center[0]
                 latLng = new google.maps.LatLng(lat, lng)
                 
                 console.log(data.features[i].center[1], data.features[i].center[0])
@@ -86,7 +90,6 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
                 marker.setMap(map);
                 map.panTo({ lat, lng });
                 smoothZoom(map, 16, map.getZoom());
-
                 $.ajax({
                     url: proxyurl + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
                     type: "GET", //send it through GET method
@@ -102,12 +105,44 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
                     success: function(data) {
                         data.results.forEach(position => {
                             console.log(position.geometry);
+                            lat = position.geometry.location.lat;
+                            lng = position.geometry.location.lng;
+                            console.log(position.geometry.location);
+                            latLng = new google.maps.LatLng(lat, lng)
+                            var parkingMarker= new google.maps.Marker({
+                                position: latLng,
+                                icon: "image/parking.png"
+                            });
+                            parkingMarker.setMap(map);
+                            $.ajax({
+                                url: proxyurl + 'https://developers.onemap.sg/privateapi/commonsvc/revgeocode',
+                                type: "GET", //send it through GET method
+                                headers: {
+                                    "Access-Control-Allow-Origin": '*'
+                                },
+                                data: {
+                                    "location":lat + "," + lng,
+                                    "radius":800,
+                                    "types":"parking",
+                                    "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
+                                },
+                                success: function(data) {
+                                    data.results.forEach(position => {
+                                        console.log(position.geometry);
+                                        lat = position.geometry.location.lat;
+                                        lng = position.geometry.location.lng;
+                                        console.log(position.geometry.location);
+                                        latLng = new google.maps.LatLng(lat, lng)
+                                        var parkingMarker= new google.maps.Marker({
+                                            position: latLng,
+                                            icon: "image/parking.png"
+                                        });
+                                        
+                                        parkingMarker.setMap(map);
+                                    });
+                                }
+                            });
                         });
-                        console.log(data.results[0].geometry.location);
-                        var parkingMarker= new google.maps.Marker({
-                            position: latLng
-                        });
-                        parkingMarker.setMap(map);
                     }
                 });
 
