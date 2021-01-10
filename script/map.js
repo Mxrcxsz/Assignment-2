@@ -55,6 +55,7 @@ const getCurrentPosition = ({ onSuccess, onError = () => { } }) => {
     return navigator.geolocation.getCurrentPosition(onSuccess, onError);
   };
 
+//Smooth zoom effect to location
 function smoothZoom(map, level, cnt){
     if (cnt >= level) {
         return;
@@ -68,6 +69,7 @@ function smoothZoom(map, level, cnt){
     }
 }
 
+//Clear all the markers on screen
 function clearOverlays() {
     for (var i = 0; i < markersArray.length; i++ ) {
       markersArray[i].setMap(null);
@@ -77,6 +79,7 @@ function clearOverlays() {
 
 var temp = true;
 
+//Display the map
 function initMap() {
     var stylez = [
         {
@@ -130,14 +133,6 @@ function initMap() {
             markersArray.push(marker);
             map.panTo({ lat, lng });
             smoothZoom(map, 17, map.getZoom());
-
-            map.addListener("center_changed", () => {
-                // 3 seconds after the center of the map has changed, pan back to the
-                // marker.
-                window.setTimeout(() => {
-                  map.panTo(marker.getPosition());
-                }, 3000);
-            });
 
             $.ajax({
                 url: proxyurl + 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',

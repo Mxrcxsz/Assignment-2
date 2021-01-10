@@ -166,10 +166,11 @@ nav a:hover{
     user-select: none;
 }
 
-/* Map.html */
+/* For Map.html */
 #map-container{
     margin-top: 72px;
 }
+
 #map {
     height: 100%;
     position: fixed;
@@ -179,7 +180,7 @@ nav a:hover{
     right: 0;
     z-index: 0;
 }
-
+/* Search Bar */
 #search{
     background-color: #ffffff;
     position: absolute;
@@ -227,6 +228,7 @@ nav a:hover{
     max-height: 70%;
 }
 
+/* Error Message */
 .info {
     padding: 1rem;
     margin: 0;
@@ -260,6 +262,7 @@ nav a:hover{
     display: flex;
 }
 
+/* Marker details panel */
 #right-sec img{
     width: 20px;
     height: 20px;

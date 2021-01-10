@@ -17,6 +17,7 @@ menu.addEventListener('click', function(){
     }
 })
 
+// To Close the address details panel
 document.getElementById("close-btn").addEventListener('click', function(){
     right_section.style.left = "-500px";
     right_section.style.opacity = "0";
@@ -37,14 +38,18 @@ function get_carpark_details(){
         }
     });
 }
-// get_carpark_details();
+
+// Check if the page is map.html
 var path = window.location.pathname;
 var page = path.split("/").pop();
 if (page == "map.html"){
     $('#map').css("height",`${$(window). height()-90}`);
 }
 
+// Proxy url to surpass CORS
 const proxyurl = "https://stark-chamber-98383.herokuapp.com/";
+
+// Seacrh location using postal code
 document.getElementById("search-loc-btn").addEventListener("click", function(){
     navigator.geolocation.clearWatch(id);
     var re = /[0-9A-Fa-f]{6}/g;

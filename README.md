@@ -1,5 +1,5 @@
 # ID-ASG-2
-Hi my name is Marcus Yeong, this is my id assignment 2 pitch recording. The purpose of creating this website is to find the nearest car park for the entered location.
+The purpose of creating this website is to find the nearest car park for the current location or entered location.
 
 ## Website Link 
 **[Snow](https://mxrcxsz.github.io/Assignment-2/)** 
