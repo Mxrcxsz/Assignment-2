@@ -17,7 +17,33 @@ menu.addEventListener('click', function(){
 
 Number.prototype.toRad = function() {
     return this * Math.PI / 180;
- } 
+}
+
+function haversineDistance(coords1, coords2) {
+    function toRad(x) {
+      return x * Math.PI / 180;
+    }
+
+    var lon1 = coords1[0];
+    var lat1 = coords1[1];
+
+    var lon2 = coords2[0];
+    var lat2 = coords2[1];
+  
+    var R = 6371; // km
+  
+    var x1 = lat2 - lat1;
+    var dLat = toRad(x1);
+    var x2 = lon2 - lon1;
+    var dLon = toRad(x2)
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+
+    return d;
+}
 
 // All Map API
 function get_carpark_details(){
@@ -104,42 +130,39 @@ document.getElementById("search-loc-btn").addEventListener("click", function(){
                     },
                     success: function(data) {
                         data.results.forEach(position => {
-                            console.log(position.geometry);
+                            // console.log(position.geometry);
                             lat = position.geometry.location.lat;
                             lng = position.geometry.location.lng;
-                            console.log(position.geometry.location);
+                            // console.log(position.geometry.location);
                             latLng = new google.maps.LatLng(lat, lng)
                             var parkingMarker= new google.maps.Marker({
                                 position: latLng,
                                 icon: "image/parking.png"
                             });
                             parkingMarker.setMap(map);
+                            
                             $.ajax({
-                                url: proxyurl + 'https://developers.onemap.sg/privateapi/commonsvc/revgeocode',
+                                url: 'https://api.jsonbin.io/b/5ff45d9709f7c73f1b6df03d',
                                 type: "GET", //send it through GET method
                                 headers: {
-                                    "Access-Control-Allow-Origin": '*'
+                                    "content-type":"application/json",
+                                    "secret-key":"$2b$10$U32F5.Qe7ErRiSaybhPmd.XQ8oikTg4jGxtm0x3zN23lMpohizeva"
                                 },
-                                data: {
-                                    "location":lat + "," + lng,
-                                    "radius":800,
-                                    "types":"parking",
-                                    "key":"AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg"
-                                },
-                                success: function(data) {
-                                    data.results.forEach(position => {
-                                        console.log(position.geometry);
-                                        lat = position.geometry.location.lat;
-                                        lng = position.geometry.location.lng;
-                                        console.log(position.geometry.location);
-                                        latLng = new google.maps.LatLng(lat, lng)
-                                        var parkingMarker= new google.maps.Marker({
-                                            position: latLng,
-                                            icon: "image/parking.png"
+                                success: function(geocodeInfo) {
+                                    for (var j = 0; j < 10; j++){
+                                        $.ajax({
+                                            url: proxyurl + 'https://developers.onemap.sg/privateapi/commonsvc/revgeocodexy',
+                                            type: "GET", //send it through GET method
+                                            data: {
+                                                "location":geocodeInfo[j].x_coord + ","+ geocodeInfo[j].y_coord,
+                                                "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjY5NTIsInVzZXJfaWQiOjY5NTIsImVtYWlsIjoiczEwMjA4NDk1QGNvbm5lY3QubnAuZWR1LnNnIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHA6XC9cL29tMi5kZmUub25lbWFwLnNnXC9hcGlcL3YyXC91c2VyXC9zZXNzaW9uIiwiaWF0IjoxNjEwMjcyNzQ1LCJleHAiOjE2MTA3MDQ3NDUsIm5iZiI6MTYxMDI3Mjc0NSwianRpIjoiMDllOTM0N2UzMzI3MDZjZGNiOTA5OTVlMDliMmVkNGIifQ.2TD19vUp5ZpgP7cShVjUBw4fmM5FBIsJIv5nDzPEHaA"
+                                            },
+                                            success: function(geocodeInfo2) {
+                                                console.log(geocodeInfo2);
+                                                // console.log(geocodeInfo2[0].LONGITUDE);
+                                            }
                                         });
-                                        
-                                        parkingMarker.setMap(map);
-                                    });
+                                    }
                                 }
                             });
                         });
