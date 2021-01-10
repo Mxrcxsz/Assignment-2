@@ -1,5 +1,9 @@
-const zoom = 11;
+const zoom = 11.5;
 var map;
+var first = true;
+var id;
+var markersArray = [];
+
 const createMap = ({ lat, lng }) => {
     return new google.maps.Map(document.getElementById('map'), {
         center: { lat, lng },
@@ -43,6 +47,14 @@ const trackLocation = ({ onSuccess, onError = () => { } }) => {
     });
 };
 
+const getCurrentPosition = ({ onSuccess, onError = () => { } }) => {
+    if ('geolocation' in navigator === false) {
+      return onError(new Error('Geolocation is not supported by your browser.'));
+    }
+  
+    return navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  };
+
 function smoothZoom(map, level, cnt){
     if (cnt >= level) {
         return;
@@ -55,6 +67,15 @@ function smoothZoom(map, level, cnt){
         setTimeout(function(){map.setZoom(cnt)}, 80);
     }
 }
+
+function clearOverlays() {
+    for (var i = 0; i < markersArray.length; i++ ) {
+      markersArray[i].setMap(null);
+    }
+    markersArray.length = 0;
+}
+
+var temp = true;
 
 function initMap() {
     var stylez = [
@@ -73,28 +94,50 @@ function initMap() {
         }
     ];
     
+    var marker;
     map = createMap({lat: 1.3521, lng: 103.8198});
     styledMapType = new google.maps.StyledMapType(stylez, {name: "Edited"});
-    const $info = document.getElementById('info');
+    const $info = $('#info');
 
     map.mapTypes.set("Edited", styledMapType);
     map.setMapTypeId('Edited');
-
-    trackLocation({
+    if(temp)
+    {
+        temp = false;
+    id = getCurrentPosition({
         onSuccess: ({ coords: { latitude: lat, longitude: lng } }) => {
-            const marker = createMarker({ 
-                map,
-                animation: google.maps.Animation.DROP,
-                position: { lat, lng }
-            });
+            if($info.hasClass('error')){
+                $info.removeClass('error');
+                $('#map').css('height', `${$('#map'). height() + 48 }`)
+            }
+            if (marker && marker.setMap) {
+                clearOverlays();
+            }
+            if (first){
+                marker = createMarker({ 
+                    map,
+                    animation: google.maps.Animation.DROP,
+                    position: { lat, lng }
+                });
+                first = false;
+            }
+            else{
+                marker = createMarker({
+                    map,
+                    position: { lat, lng }
+                });
+            }
+            markersArray.push(marker);
             map.panTo({ lat, lng });
             smoothZoom(map, 16, map.getZoom());
         },
         onError: err =>
         {
-            $info.textContent = `Error: ${getPositionErrorMessage(err.code) || err.message}`;
+            $info.text(`Error: ${getPositionErrorMessage(err.code) || err.message}`);
+            $('#map').css('height', `${$('#map'). height() - 48 }`)
             // Add error class name.
-            $info.classList.add('error');
+            $info.addClass('error');
         }
     });
+    }
 }

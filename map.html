@@ -10,14 +10,13 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaDnggQoyZ9Rv8U6nwIq-iQ0gNtSswlzg&callback=initMap&libraries=&v=weekly"
       defer
     ></script>
-    <!-- <script src="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js"></script> -->
 </head>
 <body>
     <!-- navigation bar -->
     <header>
         <nav>
             <div id="logo">
-                <a href="#" id="navbar__logo">Snow</a>
+                <a href="index.html" id="navbar__logo">Snow</a>
             </div>
             <div class="menu-toggle" id="mobile-menu">
                 <span class="bar"></span>
@@ -35,17 +34,17 @@
     <!-- Content -->
     <script src="script/map.js"></script>
     <!-- Map section -->
-    <section class="map-container">
-        <h1></h1>
+    <section id="map-container">
+        <div id="search">
+            <input id="search-loc" type="text" placeholder="Enter Postal Code">
+            <button id="search-loc-btn">
+                <img src="image/icons8-search-150 (1).png" alt="search-btn" >
+            </button>
+        </div>
         <div id="map"></div>
         <!-- For displaying user's coordinate or error message. -->
         <div id="info" class="info"></div>
-        <input id="search-loc" type="text" placeholder="Eg. Orchard Road">
-        <button id="search-loc-btn">Search Location</button>
     </section>
-    <h1 id="data"></h1>
-    <footer>
-    </footer>
 </body>
 </html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
